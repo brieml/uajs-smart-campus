@@ -1,0 +1,25 @@
+# =============================================================
+# UAJS Smart Campus - Orquestación de contenedores (producción)
+#
+# Por ahora solo se define el servicio de frontend. Cuando se
+# implementen los microservicios de backend (Usuarios, Solicitudes,
+# Reservas, Recursos, Eventos, Notificaciones) descritos en el
+# proyecto integrador, cada uno se agregará aquí como un nuevo
+# servicio, junto con sus respectivas bases de datos y el API Gateway.
+# =============================================================
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+    container_name: uajs-smart-campus-frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    networks:
+      - uajs-network
+
+networks:
+  uajs-network:
+    driver: bridge

@@ -1,0 +1,16 @@
+.solicitud-detalle { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
+
+.solicitud-detalle__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.solicitud-detalle__id { font-family: var(--font-mono); font-size: 12px; color: var(--color-text-soft); margin-bottom: 4px; }
+.solicitud-detalle__title { font-size: 22px; }
+
+.solicitud-detalle__stepper-card { overflow-x: auto; }
+.solicitud-detalle__section-title { font-size: 14.5px; margin-bottom: 16px; }
+.solicitud-detalle__text { font-size: 14px; line-height: 1.7; color: var(--color-text-muted); }
+
+.solicitud-detalle__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+
+.solicitud-detalle__fields { display: flex; flex-direction: column; gap: 12px; }
+.solicitud-detalle__fields div { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; border-bottom: 1px dashed var(--color-border); padding-bottom: 10px; }
+.solicitud-detalle__fields dt { color: var(--color-text-soft); }
+.solicitud-detalle__fields dd { margin: 0; font-weight: 600; text-align: right; }

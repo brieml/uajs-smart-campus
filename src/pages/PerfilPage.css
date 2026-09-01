@@ -1,0 +1,14 @@
+.perfil-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
+
+.perfil-page__tarjeta { display: flex; align-items: center; gap: 18px; }
+.perfil-page__nombre { font-size: 19px; margin-bottom: 4px; }
+.perfil-page__rol { font-size: 13.5px; color: var(--color-text-muted); margin-bottom: 2px; }
+.perfil-page__correo { font-size: 13px; color: var(--color-text-soft); }
+
+.perfil-page__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.perfil-page__section-title { font-size: 14.5px; margin-bottom: 14px; }
+
+.perfil-page__fields { display: flex; flex-direction: column; gap: 12px; }
+.perfil-page__fields div { display: flex; justify-content: space-between; font-size: 13.5px; border-bottom: 1px dashed var(--color-border); padding-bottom: 10px; }
+.perfil-page__fields dt { color: var(--color-text-soft); }
+.perfil-page__fields dd { margin: 0; font-weight: 600; }

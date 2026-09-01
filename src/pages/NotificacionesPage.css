@@ -1,0 +1,25 @@
+.notificaciones-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
+.notificaciones-page__subtitle { color: var(--color-text-muted); font-size: 14px; margin-top: 4px; }
+
+.notificaciones-page__filtros { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.notificaciones-page__filtro {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.notificaciones-page__filtro--activo { background: var(--color-navy-800); border-color: var(--color-navy-800); color: #fff; }
+
+.notificaciones-page__lista { display: flex; flex-direction: column; gap: 12px; }
+
+.notificacion-item { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-left: 4px solid transparent; }
+.notificacion-item--no-leida { border-left-color: var(--color-gold-500); }
+
+.notificacion-item__tipo { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-text-soft); letter-spacing: 0.05em; }
+.notificacion-item__mensaje { font-size: 14px; margin: 4px 0; }
+.notificacion-item__fecha { font-size: 12px; color: var(--color-text-soft); }

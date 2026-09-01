@@ -1,0 +1,21 @@
+.eventos-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
+.eventos-page__subtitle { color: var(--color-text-muted); font-size: 14px; margin-top: 4px; }
+
+.eventos-page__timeline { display: flex; flex-direction: column; gap: 14px; }
+
+.evento-item { display: flex; gap: 20px; }
+
+.evento-item__fecha {
+  flex-shrink: 0;
+  width: 100px;
+  padding-right: 18px;
+  border-right: 2px solid var(--color-border);
+}
+
+.evento-item__dia { font-weight: 700; font-size: 13px; color: var(--color-navy-900); }
+.evento-item__hora { font-size: 12px; color: var(--color-text-soft); font-family: var(--font-mono); }
+
+.evento-item__tipo { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--color-gold-500); letter-spacing: 0.05em; }
+.evento-item__nombre { font-size: 15.5px; margin: 4px 0 6px; }
+.evento-item__descripcion { font-size: 13.5px; color: var(--color-text-muted); line-height: 1.5; margin-bottom: 8px; }
+.evento-item__lugar { font-size: 12.5px; color: var(--color-text-soft); }

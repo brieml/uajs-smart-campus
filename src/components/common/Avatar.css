@@ -1,0 +1,14 @@
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-navy-800);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.avatar--sm { width: 32px; height: 32px; font-size: 12px; }
+.avatar--md { width: 44px; height: 44px; font-size: 15px; }
+.avatar--lg { width: 76px; height: 76px; font-size: 24px; }

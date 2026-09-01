@@ -1,0 +1,10 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.card--padded { padding: 22px; }
+.card--interactive { transition: transform var(--transition-base), box-shadow var(--transition-base); }
+.card--interactive:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }

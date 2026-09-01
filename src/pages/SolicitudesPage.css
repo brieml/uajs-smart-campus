@@ -1,0 +1,47 @@
+.solicitudes-page { display: flex; flex-direction: column; gap: 22px; padding-bottom: 24px; }
+
+.solicitudes-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.solicitudes-page__subtitle { color: var(--color-text-muted); font-size: 14px; margin-top: 4px; }
+
+.solicitudes-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.solicitud-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+}
+
+.solicitud-card__top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.solicitud-card__id { font-family: var(--font-mono); font-size: 11.5px; color: var(--color-text-soft); }
+.solicitud-card__title { font-size: 15.5px; }
+.solicitud-card__description { font-size: 13.5px; color: var(--color-text-muted); line-height: 1.5; }
+
+.solicitud-card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-text-soft);
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+}
+
+.solicitudes-page__form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}

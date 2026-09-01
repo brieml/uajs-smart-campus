@@ -1,13 +1,119 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* =========================================================
+   UAJS SMART CAMPUS - ESTILOS GLOBALES Y TOKENS DE DISEÑO
+   Paleta institucional (azul navy + dorado) inspirada en el
+   logotipo de la Corporacion Universitaria Antonio Jose de Sucre.
+   ========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Color: institucional */
+  --color-navy-900: #0a2136;
+  --color-navy-800: #0f2a47;
+  --color-navy-700: #16395e;
+  --color-navy-600: #1b4b7a;
+  --color-gold-500: #e8a93a;
+  --color-gold-400: #f0bc5e;
+
+  /* Color: estado / semantica */
+  --color-success: #2f9e64;
+  --color-success-bg: #e6f6ee;
+  --color-warning: #d97706;
+  --color-warning-bg: #fdf1e0;
+  --color-danger: #d6473c;
+  --color-danger-bg: #fbe9e7;
+  --color-info: #2b6cb0;
+  --color-info-bg: #e8f1fb;
+
+  /* Color: neutros */
+  --color-bg: #f5f7fa;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
+  --color-text: #1a2332;
+  --color-text-muted: #5b6b7f;
+  --color-text-soft: #8896a6;
+
+  /* Tipografia */
+  --font-display: 'Sora', system-ui, sans-serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Layout */
+  --sidebar-width: 248px;
+  --header-height: 72px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 2px rgba(15, 42, 71, 0.06), 0 8px 24px rgba(15, 42, 71, 0.06);
+  --shadow-pop: 0 12px 32px rgba(15, 42, 71, 0.16);
+  --transition-base: 180ms ease;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
 }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--color-navy-900);
+  margin: 0;
+}
+
+p { margin: 0; }
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+img { max-width: 100%; display: block; }
+
+:focus-visible {
+  outline: 3px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+/* Respeta preferencia de reduccion de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Utilidades minimas compartidas (no reemplazan BEM, solo layout) */
+.u-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-soft); }

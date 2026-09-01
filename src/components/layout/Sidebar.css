@@ -1,0 +1,110 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--color-navy-900);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  z-index: 40;
+  transition: transform var(--transition-base);
+}
+
+.sidebar__scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 33, 54, 0.5);
+  z-index: 39;
+  display: none;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 24px;
+}
+
+.sidebar__brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--color-gold-500);
+  color: var(--color-navy-900);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.sidebar__brand-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0;
+  color: #fff;
+}
+
+.sidebar__brand-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.08em;
+}
+
+.sidebar__nav { flex: 1; overflow-y: auto; }
+
+.sidebar__list { display: flex; flex-direction: column; gap: 4px; }
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14.5px;
+  font-weight: 600;
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+.sidebar__link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.sidebar__link--active {
+  background: var(--color-navy-600);
+  color: #fff;
+  box-shadow: inset 3px 0 0 var(--color-gold-500);
+}
+
+.sidebar__icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sidebar__footer {
+  padding: 16px 10px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 12px;
+}
+
+.sidebar__footer-text {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+}
+
+.sidebar__footer-text--strong { color: rgba(255, 255, 255, 0.75); font-weight: 600; }
+
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-pop);
+  }
+  .sidebar--open { transform: translateX(0); }
+  .sidebar__scrim { display: block; }
+}
