@@ -161,7 +161,7 @@ export default function App() {
           </h1>
           <p className="subtext">
             Inicia sesion con tu cuenta institucional y accede al panel de tu
-            perfil: estudiante, docente, administrativo o administrador.
+            perfil.
           </p>
         </div>   
 
