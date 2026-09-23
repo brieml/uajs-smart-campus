@@ -46,14 +46,31 @@ export default function SolicitudesPage() {
   function actualizarCampo(campo) {
     return (e) => setFormulario((prev) => ({ ...prev, [campo]: e.target.value }))
   }
-
+  
   async function manejarEnvio(e) {
     e.preventDefault()
     setError('')
+    
+    const descripcion = formulario.descripcion.trim()
+    
+    if (!descripcion) {
+      setError('La descripción es obligatoria.')
+      return
+    }
+    
+    if (descripcion.length < 10) {
+      setError('La descripción debe tener al menos 10 caracteres.')
+      return
+    }
+    
     setEnviando(true)
     
     try {
-      await crearSolicitud(formulario)
+      await crearSolicitud({
+        ...formulario,
+        descripcion,
+      })
+      
       setModalAbierto(false)
       setFormulario(FORMULARIO_VACIO)
       refetch()
