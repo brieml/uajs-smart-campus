@@ -23,6 +23,7 @@ export default function ReservasPage() {
   const [modalAbierto, setModalAbierto] = useState(false)
   const [formulario, setFormulario] = useState(FORMULARIO_VACIO)
   const [enviando, setEnviando] = useState(false)
+  const [error, setError] = useState('')
 
   function actualizarCampo(campo) {
     return (e) => setFormulario((prev) => ({ ...prev, [campo]: e.target.value }))
@@ -35,12 +36,19 @@ export default function ReservasPage() {
 
   async function manejarEnvio(e) {
     e.preventDefault()
+    setError('')
     setEnviando(true)
-    await crearReserva(formulario)
-    setEnviando(false)
-    setModalAbierto(false)
-    setFormulario(FORMULARIO_VACIO)
-    refetch()
+    
+    try {
+      await crearReserva(formulario)
+      setModalAbierto(false)
+      setFormulario(FORMULARIO_VACIO)
+      refetch()
+    } catch {
+      setError('No fue posible registrar la reserva. Intenta nuevamente.')
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -104,6 +112,13 @@ export default function ReservasPage() {
           <FormField label="Tipo" as="select" options={['Laboratorio', 'Sala', 'Espacio académico', 'Equipo tecnológico']} value={formulario.tipo} onChange={actualizarCampo('tipo')} />
           <FormField label="Fecha" type="date" required value={formulario.fecha} onChange={actualizarCampo('fecha')} />
           <FormField label="Hora" required placeholder="Ej. 08:00 - 10:00" value={formulario.hora} onChange={actualizarCampo('hora')} />
+          
+          {error && (
+            <div className="reservas-page__error">
+              {error}
+              </div>
+            )}
+            
           <div className="reservas-page__form-actions">
             <Button type="button" variant="ghost" onClick={() => setModalAbierto(false)}>Cancelar</Button>
             <Button type="submit" variant="primary" disabled={enviando}>{enviando ? 'Guardando…' : 'Registrar reserva'}</Button>
