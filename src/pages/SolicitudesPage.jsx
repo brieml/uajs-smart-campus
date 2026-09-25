@@ -41,19 +41,44 @@ export default function SolicitudesPage() {
   const [modalAbierto, setModalAbierto] = useState(false)
   const [formulario, setFormulario] = useState(FORMULARIO_VACIO)
   const [enviando, setEnviando] = useState(false)
+  const [error, setError] = useState('')
 
   function actualizarCampo(campo) {
     return (e) => setFormulario((prev) => ({ ...prev, [campo]: e.target.value }))
   }
-
+  
   async function manejarEnvio(e) {
     e.preventDefault()
+    setError('')
+    
+    const descripcion = formulario.descripcion.trim()
+    
+    if (!descripcion) {
+      setError('La descripción es obligatoria.')
+      return
+    }
+    
+    if (descripcion.length < 10) {
+      setError('La descripción debe tener al menos 10 caracteres.')
+      return
+    }
+    
     setEnviando(true)
-    await crearSolicitud(formulario)
-    setEnviando(false)
-    setModalAbierto(false)
-    setFormulario(FORMULARIO_VACIO)
-    refetch()
+    
+    try {
+      await crearSolicitud({
+        ...formulario,
+        descripcion,
+      })
+      
+      setModalAbierto(false)
+      setFormulario(FORMULARIO_VACIO)
+      refetch()
+    } catch {
+      setError('No fue posible registrar la solicitud. Intenta nuevamente.')
+    } finally {
+      setEnviando(false)
+    }
   }
 
   return (
@@ -104,6 +129,12 @@ export default function SolicitudesPage() {
 
       <Modal open={modalAbierto} title="Registrar nueva solicitud" onClose={() => setModalAbierto(false)}>
         <form onSubmit={manejarEnvio}>
+          {error && (
+            <p className="solicitudes-page__form-error" role="alert">
+              {error}
+              </p>
+            )}
+            
           <FormField label="Tipo de solicitud" as="select" options={TIPOS_SOLICITUD} value={formulario.tipoServicio} onChange={actualizarCampo('tipoServicio')} />
           <FormField label="Dependencia" as="select" options={DEPENDENCIAS} value={formulario.dependencia} onChange={actualizarCampo('dependencia')} />
           <FormField label="Prioridad" as="select" options={['Baja', 'Media', 'Alta']} value={formulario.prioridad} onChange={actualizarCampo('prioridad')} />
