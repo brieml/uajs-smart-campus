@@ -1,5 +1,8 @@
 .eventos-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
+.eventos-page__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .eventos-page__subtitle { color: var(--color-text-muted); font-size: 14px; margin-top: 4px; }
+.eventos-page__aviso { font-size: 12.5px; color: var(--color-text-soft); background: var(--color-bg); border-radius: var(--radius-sm); padding: 10px 12px; margin: 4px 0 12px; }
+.eventos-page__form-actions { display: flex; justify-content: flex-end; gap: 10px; }
 
 .eventos-page__timeline { display: flex; flex-direction: column; gap: 14px; }
 

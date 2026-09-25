@@ -18,10 +18,6 @@ export default function Header({ onToggleSidebar, onSearch }) {
     onSearch?.(valor)
   }
 
-  function salir() {
-    navigate('/')
-  }
-
   return (
     <header className="header">
       <button
@@ -32,8 +28,6 @@ export default function Header({ onToggleSidebar, onSearch }) {
       >
         ☰
       </button>
-
-   
 
       <div className="header__search">
         <SearchBar
@@ -62,9 +56,6 @@ export default function Header({ onToggleSidebar, onSearch }) {
           <Avatar nombre={usuario?.nombre} size="sm" />
           <span className="header__profile-name">{usuario?.nombre?.split(' ')[0] ?? '...'}</span>
         </button>
-           <button type="button" className="header__profile" onClick={salir}>
-        <span className="header__profile-name"> salir </span>
-      </button>
       </div>
     </header>
   )

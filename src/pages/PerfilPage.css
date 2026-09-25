@@ -1,5 +1,7 @@
 .perfil-page { display: flex; flex-direction: column; gap: 20px; padding-bottom: 24px; }
 
+.perfil-page__header { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
 .perfil-page__tarjeta { display: flex; align-items: center; gap: 18px; }
 .perfil-page__nombre { font-size: 19px; margin-bottom: 4px; }
 .perfil-page__rol { font-size: 13.5px; color: var(--color-text-muted); margin-bottom: 2px; }

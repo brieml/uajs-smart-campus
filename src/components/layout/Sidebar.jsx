@@ -1,4 +1,6 @@
 import { NavLink } from 'react-router-dom'
+import { useApp } from '../../context/AppContext'
+
 import {
   FiHome,
   FiFileText,
@@ -6,6 +8,8 @@ import {
   FiBookOpen,
   FiBell,
   FiUser,
+  FiUsers,
+  FiShield,
   FiX,
 } from 'react-icons/fi'
 
@@ -18,7 +22,24 @@ const ENLACES = [
   { to: '/perfil', label: 'Perfil', icon: FiUser },
 ]
 
+const ENLACE_ADMIN = {
+  to: '/usuarios',
+  label: 'Usuarios',
+  icon: FiUsers,
+}
+
+/**
+ * Barra lateral de navegación principal.
+ * El enlace "Usuarios" solo aparece
+ * para el rol ADMINISTRADOR.
+ */
 export default function Sidebar({ open, onClose }) {
+  const { esAdmin } = useApp()
+
+  const enlaces = esAdmin
+    ? [...ENLACES, ENLACE_ADMIN]
+    : ENLACES
+
   return (
     <>
       {open && (
@@ -29,12 +50,20 @@ export default function Sidebar({ open, onClose }) {
         />
       )}
 
-      <aside className={`sidebar ${open ? 'sidebar--open' : ''}`}>
-        {/* ENCABEZADO */}
+      <aside
+        className={`sidebar ${open ? 'sidebar--open' : ''}`}
+      >
+
+        {/* =====================
+            ENCABEZADO
+        ===================== */}
+
         <div className="sidebar__header">
+
           <div className="sidebar__brand">
+
             <div className="sidebar__brand-mark">
-              <span>SC</span>
+              SC
             </div>
 
             <div className="sidebar__brand-info">
@@ -46,6 +75,7 @@ export default function Sidebar({ open, onClose }) {
                 UAJS
               </p>
             </div>
+
           </div>
 
           <button
@@ -55,72 +85,155 @@ export default function Sidebar({ open, onClose }) {
           >
             <FiX />
           </button>
+
         </div>
 
+
         {/* DIVISOR */}
+
         <div className="sidebar__divider" />
 
-        {/* NAVEGACIÓN */}
+
+        {/* =====================
+            NAVEGACIÓN
+        ===================== */}
+
         <nav
           className="sidebar__nav"
           aria-label="Navegación principal"
         >
+
           <p className="sidebar__section-title">
-            MENÚ PRINCIPAL
+            NAVEGACIÓN
           </p>
 
+
           <ul className="sidebar__list">
-            {ENLACES.map((enlace) => {
+
+            {enlaces.map((enlace) => {
+
               const Icon = enlace.icon
+
+              const esEnlaceAdmin =
+                enlace.to === '/usuarios'
 
               return (
                 <li
                   className="sidebar__item"
                   key={enlace.to}
                 >
+
+                  {/* Etiqueta administrativa */}
+
+                  {esEnlaceAdmin && (
+                    <div className="sidebar__admin-divider">
+
+                      <span>
+                        ADMINISTRACIÓN
+                      </span>
+
+                    </div>
+                  )}
+
+
                   <NavLink
                     to={enlace.to}
                     onClick={onClose}
                     className={({ isActive }) =>
-                      `sidebar__link ${
-                        isActive
-                          ? 'sidebar__link--active'
-                          : ''
-                      }`
+                      `
+                      sidebar__link
+                      ${isActive ? 'sidebar__link--active' : ''}
+                      ${esEnlaceAdmin ? 'sidebar__link--admin' : ''}
+                      `
                     }
                   >
-                    <span className="sidebar__icon">
+
+                    <span
+                      className="sidebar__icon"
+                      aria-hidden="true"
+                    >
                       <Icon />
                     </span>
+
 
                     <span className="sidebar__label">
                       {enlace.label}
                     </span>
 
+
+                    {/* Indicador */}
+
                     <span className="sidebar__active-indicator" />
+
                   </NavLink>
+
                 </li>
               )
             })}
+
           </ul>
+
         </nav>
 
-        {/* FOOTER */}
+
+        {/* =====================
+            ROL ADMIN
+        ===================== */}
+
+        {esAdmin && (
+
+          <div className="sidebar__role">
+
+            <div className="sidebar__role-icon">
+              <FiShield />
+            </div>
+
+            <div>
+
+              <p className="sidebar__role-title">
+                Administrador
+              </p>
+
+              <p className="sidebar__role-text">
+                Panel de gestión
+              </p>
+
+            </div>
+
+          </div>
+
+        )}
+
+
+        {/* =====================
+            FOOTER
+        ===================== */}
+
         <div className="sidebar__footer">
+
           <div className="sidebar__footer-logo">
             UAJS
           </div>
 
           <div>
+
             <p className="sidebar__footer-text">
               Corporación Universitaria
             </p>
 
-            <p className="sidebar__footer-text sidebar__footer-text--strong">
+            <p
+              className="
+              sidebar__footer-text
+              sidebar__footer-text--strong
+              "
+            >
               Antonio José de Sucre
             </p>
+
           </div>
+
         </div>
+
       </aside>
     </>
   )

@@ -11,7 +11,7 @@ export default function Footer() {
         © {anioActual} Corporación Universitaria Antonio José de Sucre — UAJS Smart Campus
       </p>
       <p className="footer__text footer__text--muted">
-        Prototipo académico. No sustituye los sistemas institucionales oficiales.
+        Prototipo académico de la asignatura Sistemas Distribuidos. No sustituye los sistemas institucionales oficiales.
       </p>
     </footer>
   )

@@ -5,6 +5,7 @@
  * la Universidad Antonio Jose de Sucre, conforme a lo solicitado en
  * el proyecto integrador.
  */
+import usuariosSemilla from '../data/usuarios.json'
 
 export const ESTADOS_SOLICITUD = [
   'REGISTRADA',
@@ -15,15 +16,25 @@ export const ESTADOS_SOLICITUD = [
   'CERRADA',
 ]
 
-export const usuarioActual = {
-  id: 'u-001',
-  nombre: 'Andres Herrera Pérez',
-  tipoUsuario: 'ESTUDIANTE',
-  programa: 'Ingeniería de Sistemas',
-  codigo: 'UAJS-2023-0142',
-  correo: 'Andres.herrera@uajs.edu.co',
-  iniciales: 'AH',
-}
+export const ESTADOS_RESERVA = ['PENDIENTE', 'CONFIRMADA', 'CANCELADA']
+
+export const TIPOS_USUARIO = ['ESTUDIANTE', 'DOCENTE', 'ADMINISTRATIVO', 'ADMINISTRADOR']
+
+/**
+ * Cuentas de prueba para el inicio de sesión (una por cada rol del
+ * sistema, ver sección "7. USUARIOS DEL SISTEMA" del proyecto
+ * integrador). Se cargan desde un archivo JSON (src/data/usuarios.json)
+ * para simular el origen de datos que en producción vendría del
+ * microservicio de Usuarios. La contraseña se guarda en texto plano
+ * únicamente porque esto es un prototipo académico con datos
+ * ficticios: en un backend real las credenciales jamás se validan ni
+ * se exponen así.
+ */
+export const usuarios = usuariosSemilla
+
+// Cuenta demo usada como semilla en los datos ficticios (reservas de
+// ejemplo, etc.) cuando todavía no hay una sesión iniciada.
+export const usuarioActual = usuarios[0]
 
 export const servicios = [
   {
@@ -121,6 +132,7 @@ export const servicios = [
 export const solicitudesIniciales = [
   {
     id: 'SOL-1001',
+    usuarioId: usuarios[0].id,
     tipoServicio: 'Certificado académico',
     dependencia: 'Registro y Control',
     fecha: '2026-08-05',
@@ -131,6 +143,7 @@ export const solicitudesIniciales = [
   },
   {
     id: 'SOL-1002',
+    usuarioId: usuarios[0].id,
     tipoServicio: 'Reserva de laboratorio',
     dependencia: 'Facultad de Ingeniería',
     fecha: '2026-08-10',
@@ -141,6 +154,7 @@ export const solicitudesIniciales = [
   },
   {
     id: 'SOL-1003',
+    usuarioId: usuarios[0].id,
     tipoServicio: 'Constancia de matrícula',
     dependencia: 'Registro y Control',
     fecha: '2026-07-22',
@@ -151,6 +165,7 @@ export const solicitudesIniciales = [
   },
   {
     id: 'SOL-1004',
+    usuarioId: usuarios[1].id,
     tipoServicio: 'PQRS - Sugerencia',
     dependencia: 'Bienestar Universitario',
     fecha: '2026-08-15',
@@ -164,6 +179,7 @@ export const solicitudesIniciales = [
 export const reservasIniciales = [
   {
     id: 'RES-501',
+    usuarioId: usuarioActual.id,
     recurso: 'Laboratorio de Redes 2',
     tipo: 'Laboratorio',
     fecha: '2026-08-25',
@@ -173,6 +189,7 @@ export const reservasIniciales = [
   },
   {
     id: 'RES-502',
+    usuarioId: usuarioActual.id,
     recurso: 'Sala de juntas Bloque C',
     tipo: 'Sala',
     fecha: '2026-08-27',
@@ -196,9 +213,21 @@ export const eventos = [
   { id: 'EVT-03', nombre: 'Feria de Bienestar Universitario', fecha: '2026-09-12', hora: '10:00', lugar: 'Plazoleta Central', descripcion: 'Actividades deportivas, culturales y de salud para toda la comunidad UAJS.', tipo: 'Actividad institucional' },
 ]
 
-export const notificacionesIniciales = [
-  { id: 'NOT-01', tipo: 'Solicitud', mensaje: 'Tu solicitud SOL-1002 cambió de estado a "Asignada".', fecha: '2026-08-18', leida: false },
-  { id: 'NOT-02', tipo: 'Reserva', mensaje: 'Tu reserva RES-502 quedó pendiente de confirmación.', fecha: '2026-08-19', leida: false },
-  { id: 'NOT-03', tipo: 'Evento', mensaje: 'Nuevo evento publicado: Semana de la Ingeniería 2026.', fecha: '2026-08-20', leida: true },
-  { id: 'NOT-04', tipo: 'Solicitud', mensaje: 'Tu solicitud SOL-1003 fue cerrada exitosamente.', fecha: '2026-08-12', leida: true },
-]
+/**
+ * Notificaciones iniciales por usuario. Cada estudiante, docente o
+ * administrativo tiene su propia bandeja: las notificaciones que
+ * genera el administrador del sistema (cambios de estado, eventos
+ * nuevos, etc.) se agregan a la bandeja del usuario correspondiente,
+ * nunca a una lista global compartida.
+ */
+export const notificacionesInicialesPorUsuario = {
+  [usuarios[0].id]: [
+    { id: 'NOT-01', tipo: 'Solicitud', mensaje: 'Tu solicitud SOL-1002 cambió de estado a "Asignada".', fecha: '2026-08-18', leida: false },
+    { id: 'NOT-02', tipo: 'Reserva', mensaje: 'Tu reserva RES-502 quedó pendiente de confirmación.', fecha: '2026-08-19', leida: false },
+    { id: 'NOT-03', tipo: 'Evento', mensaje: 'Nuevo evento publicado: Semana de la Ingeniería 2026.', fecha: '2026-08-20', leida: true },
+    { id: 'NOT-04', tipo: 'Solicitud', mensaje: 'Tu solicitud SOL-1003 fue cerrada exitosamente.', fecha: '2026-08-12', leida: true },
+  ],
+  [usuarios[1].id]: [
+    { id: 'NOT-05', tipo: 'Evento', mensaje: 'Nuevo evento publicado: Semana de la Ingeniería 2026.', fecha: '2026-08-20', leida: false },
+  ],
+}

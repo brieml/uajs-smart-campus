@@ -31,7 +31,7 @@ export default function HomePage() {
   const terminoActivo = (terminoBusqueda || busquedaLocal || '').trim().toLowerCase()
 
   const { data: servicios, loading: cargandoServicios } = useFetch(getServicios, [])
-  const { data: resumen, loading: cargandoResumen } = useFetch(getResumenDashboard, [])
+  const { data: resumen, loading: cargandoResumen } = useFetch(() => getResumenDashboard(usuario), [usuario])
 
   const serviciosFiltrados = useMemo(() => {
     if (!servicios) return []
@@ -42,8 +42,6 @@ export default function HomePage() {
         s.categoria.toLowerCase().includes(terminoActivo)
     )
   }, [servicios, terminoActivo])
-
-  
 
   return (
     <div className="home-page">
@@ -56,9 +54,7 @@ export default function HomePage() {
         <div className="home-page__local-search">
           <SearchBar value={busquedaLocal} onChange={setBusquedaLocal} placeholder="Buscar por nombre o categoría…" />
         </div>
-       
       </section>
-      
 
       <section className="home-page__stats" aria-label="Indicadores del dashboard">
         {cargandoResumen && <LoadingSpinner label="Calculando indicadores…" />}

@@ -1,23 +1,33 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useFetch } from '../hooks/useFetch'
-import { getSolicitudPorId } from '../services/api'
+import { actualizarEstadoSolicitud, getSolicitudPorId } from '../services/api'
+import { ESTADOS_SOLICITUD } from '../services/mockData'
+import { useApp } from '../context/AppContext'
 import Card from '../components/common/Card'
 import Button from '../components/common/Button'
 import Badge from '../components/common/Badge'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 import EmptyState from '../components/common/EmptyState'
 import StatusStepper from '../components/ui/StatusStepper'
+import EstadoSelect from '../components/ui/EstadoSelect'
 import { formatearFecha } from '../utils/formatters'
 
 /**
  * Vista de detalle de una solicitud específica: información completa
  * y evolución de su estado mediante el StatusStepper en tamaño
- * completo.
+ * completo. El personal administrativo puede además actualizar el
+ * estado directamente desde aquí.
  */
 export default function SolicitudDetallePage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data: solicitud, loading } = useFetch(() => getSolicitudPorId(id), [id])
+  const { esAdministrativo } = useApp()
+  const { data: solicitud, loading, refetch } = useFetch(() => getSolicitudPorId(id), [id])
+
+  async function manejarCambioEstado(nuevoEstado) {
+    await actualizarEstadoSolicitud(id, nuevoEstado)
+    refetch()
+  }
 
   if (loading) return <LoadingSpinner label="Cargando solicitud…" />
 
@@ -41,7 +51,11 @@ export default function SolicitudDetallePage() {
           <p className="solicitud-detalle__id">{solicitud.id}</p>
           <h1 className="solicitud-detalle__title">{solicitud.tipoServicio}</h1>
         </div>
-        <Badge estado={solicitud.estado} />
+        {esAdministrativo ? (
+          <EstadoSelect estado={solicitud.estado} opciones={ESTADOS_SOLICITUD} onChange={manejarCambioEstado} />
+        ) : (
+          <Badge estado={solicitud.estado} />
+        )}
       </div>
 
       <Card className="card--padded solicitud-detalle__stepper-card">

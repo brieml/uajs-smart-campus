@@ -1,23 +1,35 @@
+import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { useFetch } from '../hooks/useFetch'
 import { getResumenDashboard } from '../services/api'
 import Card from '../components/common/Card'
 import Avatar from '../components/common/Avatar'
+import Button from '../components/common/Button'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 
 /**
  * Vista de perfil: información básica del usuario que interactúa con
- * la plataforma y un resumen de su actividad reciente.
+ * la plataforma, un resumen de su actividad reciente y la opción de
+ * cerrar sesión.
  */
 export default function PerfilPage() {
-  const { usuario, cargandoUsuario } = useApp()
-  const { data: resumen, loading: cargandoResumen } = useFetch(getResumenDashboard, [])
+  const navigate = useNavigate()
+  const { usuario, cargandoUsuario, esAdmin, cerrarSesion } = useApp()
+  const { data: resumen, loading: cargandoResumen } = useFetch(() => getResumenDashboard(usuario), [usuario])
+
+  async function manejarCierreSesion() {
+    await cerrarSesion()
+    navigate('/login')
+  }
 
   if (cargandoUsuario) return <LoadingSpinner label="Cargando tu perfil…" />
 
   return (
     <div className="perfil-page">
-      <h1>Perfil</h1>
+      <div className="perfil-page__header">
+        <h1>Perfil</h1>
+        <Button variant="ghost" onClick={manejarCierreSesion}>Cerrar sesión</Button>
+      </div>
 
       <Card className="card--padded perfil-page__tarjeta">
         <Avatar nombre={usuario?.nombre} size="lg" />
@@ -44,8 +56,8 @@ export default function PerfilPage() {
             <LoadingSpinner label="Calculando actividad…" />
           ) : (
             <dl className="perfil-page__fields">
-              <div><dt>Solicitudes pendientes</dt><dd>{resumen.solicitudesPendientes}</dd></div>
-              <div><dt>Reservas realizadas</dt><dd>{resumen.reservasRealizadas}</dd></div>
+              <div><dt>{esAdmin ? 'Solicitudes pendientes (todas)' : 'Solicitudes pendientes'}</dt><dd>{resumen.solicitudesPendientes}</dd></div>
+              <div><dt>{esAdmin ? 'Reservas registradas (todas)' : 'Reservas realizadas'}</dt><dd>{resumen.reservasRealizadas}</dd></div>
               <div><dt>Notificaciones sin leer</dt><dd>{resumen.notificacionesNoLeidas}</dd></div>
             </dl>
           )}

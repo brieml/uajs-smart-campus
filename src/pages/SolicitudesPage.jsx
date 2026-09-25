@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useFetch } from '../hooks/useFetch'
-import { crearSolicitud, getSolicitudes } from '../services/api'
+import { actualizarEstadoSolicitud, crearSolicitud, getSolicitudes } from '../services/api'
+import { ESTADOS_SOLICITUD } from '../services/mockData'
+import { useApp } from '../context/AppContext'
 import Card from '../components/common/Card'
 import Button from '../components/common/Button'
 import Badge from '../components/common/Badge'
@@ -9,6 +11,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner'
 import EmptyState from '../components/common/EmptyState'
 import Modal from '../components/ui/Modal'
 import StatusStepper from '../components/ui/StatusStepper'
+import EstadoSelect from '../components/ui/EstadoSelect'
 import FormField from '../components/common/FormField'
 import { formatearFecha } from '../utils/formatters'
 
@@ -32,53 +35,42 @@ const FORMULARIO_VACIO = {
 }
 
 /**
- * Vista de solicitudes: permite consultar las solicitudes registradas
- * por el usuario y registrar una nueva a través de un modal.
+ * Vista de solicitudes. Un estudiante o docente ve únicamente sus
+ * propios trámites; el personal administrativo ve los de toda la
+ * comunidad y puede actualizar su estado, lo que notifica
+ * automáticamente a quien la registró.
  */
 export default function SolicitudesPage() {
   const navigate = useNavigate()
+  const { usuario, esAdministrativo } = useApp()
   const { data: solicitudes, loading, refetch } = useFetch(getSolicitudes, [])
   const [modalAbierto, setModalAbierto] = useState(false)
   const [formulario, setFormulario] = useState(FORMULARIO_VACIO)
   const [enviando, setEnviando] = useState(false)
-  const [error, setError] = useState('')
+
+  const solicitudesVisibles = useMemo(() => {
+    if (!solicitudes) return []
+    if (esAdministrativo) return solicitudes
+    return solicitudes.filter((s) => s.usuarioId === usuario?.id)
+  }, [solicitudes, esAdministrativo, usuario])
 
   function actualizarCampo(campo) {
     return (e) => setFormulario((prev) => ({ ...prev, [campo]: e.target.value }))
   }
-  
+
   async function manejarEnvio(e) {
     e.preventDefault()
-    setError('')
-    
-    const descripcion = formulario.descripcion.trim()
-    
-    if (!descripcion) {
-      setError('La descripción es obligatoria.')
-      return
-    }
-    
-    if (descripcion.length < 10) {
-      setError('La descripción debe tener al menos 10 caracteres.')
-      return
-    }
-    
     setEnviando(true)
-    
-    try {
-      await crearSolicitud({
-        ...formulario,
-        descripcion,
-      })
-      
-      setModalAbierto(false)
-      setFormulario(FORMULARIO_VACIO)
-      refetch()
-    } catch {
-      setError('No fue posible registrar la solicitud. Intenta nuevamente.')
-    } finally {
-      setEnviando(false)
-    }
+    await crearSolicitud(formulario, usuario?.id)
+    setEnviando(false)
+    setModalAbierto(false)
+    setFormulario(FORMULARIO_VACIO)
+    refetch()
+  }
+
+  async function manejarCambioEstado(id, nuevoEstado) {
+    await actualizarEstadoSolicitud(id, nuevoEstado)
+    refetch()
   }
 
   return (
@@ -86,36 +78,48 @@ export default function SolicitudesPage() {
       <div className="solicitudes-page__header">
         <div>
           <h1>Solicitudes</h1>
-          <p className="solicitudes-page__subtitle">Registro y seguimiento de tus trámites universitarios.</p>
+          <p className="solicitudes-page__subtitle">
+            {esAdministrativo
+              ? 'Gestiona el estado de las solicitudes de toda la comunidad universitaria.'
+              : 'Registro y seguimiento de tus trámites universitarios.'}
+          </p>
         </div>
         <Button variant="accent" onClick={() => setModalAbierto(true)}>+ Nueva solicitud</Button>
       </div>
 
-      {loading && <LoadingSpinner label="Cargando tus solicitudes…" />}
+      {loading && <LoadingSpinner label="Cargando solicitudes…" />}
 
-      {!loading && solicitudes?.length === 0 && (
+      {!loading && solicitudesVisibles.length === 0 && (
         <EmptyState
           icon="📄"
-          title="Aún no tienes solicitudes registradas"
-          description="Cuando registres un trámite, aparecerá aquí con su estado actualizado."
+          title={esAdministrativo ? 'No hay solicitudes registradas' : 'Aún no tienes solicitudes registradas'}
+          description="Cuando se registre un trámite, aparecerá aquí con su estado actualizado."
           action={<Button variant="accent" onClick={() => setModalAbierto(true)}>Registrar solicitud</Button>}
         />
       )}
 
       <div className="solicitudes-page__list">
-        {solicitudes?.map((solicitud) => (
+        {solicitudesVisibles.map((solicitud) => (
           <Card
             key={solicitud.id}
-            as="button"
+            as={esAdministrativo ? 'div' : 'button'}
             className="solicitud-card card--padded card--interactive"
-            onClick={() => navigate(`/solicitudes/${solicitud.id}`)}
+            onClick={esAdministrativo ? undefined : () => navigate(`/solicitudes/${solicitud.id}`)}
           >
             <div className="solicitud-card__top">
               <div>
                 <p className="solicitud-card__id">{solicitud.id}</p>
                 <h3 className="solicitud-card__title">{solicitud.tipoServicio}</h3>
               </div>
-              <Badge estado={solicitud.estado} />
+              {esAdministrativo ? (
+                <EstadoSelect
+                  estado={solicitud.estado}
+                  opciones={ESTADOS_SOLICITUD}
+                  onChange={(nuevoEstado) => manejarCambioEstado(solicitud.id, nuevoEstado)}
+                />
+              ) : (
+                <Badge estado={solicitud.estado} />
+              )}
             </div>
             <p className="solicitud-card__description">{solicitud.descripcion}</p>
             <StatusStepper estadoActual={solicitud.estado} compact />
@@ -123,18 +127,17 @@ export default function SolicitudesPage() {
               <span>{solicitud.dependencia}</span>
               <span>{formatearFecha(solicitud.fecha)}</span>
             </div>
+            {esAdministrativo && (
+              <div className="solicitud-card__admin-actions">
+                <Button variant="link" onClick={() => navigate(`/solicitudes/${solicitud.id}`)}>Ver detalle →</Button>
+              </div>
+            )}
           </Card>
         ))}
       </div>
 
       <Modal open={modalAbierto} title="Registrar nueva solicitud" onClose={() => setModalAbierto(false)}>
         <form onSubmit={manejarEnvio}>
-          {error && (
-            <p className="solicitudes-page__form-error" role="alert">
-              {error}
-              </p>
-            )}
-            
           <FormField label="Tipo de solicitud" as="select" options={TIPOS_SOLICITUD} value={formulario.tipoServicio} onChange={actualizarCampo('tipoServicio')} />
           <FormField label="Dependencia" as="select" options={DEPENDENCIAS} value={formulario.dependencia} onChange={actualizarCampo('dependencia')} />
           <FormField label="Prioridad" as="select" options={['Baja', 'Media', 'Alta']} value={formulario.prioridad} onChange={actualizarCampo('prioridad')} />
