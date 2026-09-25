@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useFetch } from '../hooks/useFetch'
 import { actualizarEstadoReserva, crearReserva, getRecursos, getReservas } from '../services/api'
-import { ESTADOS_RESERVA } from '../services/mockData'
+import { ESTADOS_RESERVA } from '../components/ui/StatusStepper'
 import { useApp } from '../context/AppContext'
 import Card from '../components/common/Card'
 import Button from '../components/common/Button'

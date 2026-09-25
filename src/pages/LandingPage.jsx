@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useCountdown } from '../hooks/useCountdown'
-import { servicios } from '../services/mockData'
+import { servicios } from '../services/serviciosConstantes'
 import { useApp } from '../context/AppContext'
 
 const PERFILES = [

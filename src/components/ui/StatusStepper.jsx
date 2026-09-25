@@ -1,5 +1,20 @@
-import { ESTADOS_SOLICITUD } from '../../services/mockData'
 import { etiquetaEstado } from '../../utils/formatters'
+
+/**
+ * Estados de solicitud y reserva (catálogos estáticos).
+ * Se mantienen aquí para que el frontend funcione aunque el backend
+ * aún no los provea; el backend los devolverá cuando correspondan.
+ */
+export const ESTADOS_SOLICITUD = [
+  'REGISTRADA',
+  'EN_REVISION',
+  'ASIGNADA',
+  'EN_PROCESO',
+  'RESUELTA',
+  'CERRADA',
+]
+
+export const ESTADOS_RESERVA = ['PENDIENTE', 'CONFIRMADA', 'CANCELADA']
 
 /**
  * StatusStepper — elemento visual insignia de UAJS Smart Campus.
