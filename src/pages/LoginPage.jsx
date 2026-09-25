@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CreditCard, Lock, Eye, EyeOff, Check, ArrowRight } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, Check, ArrowRight } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { esModoMock, solicitarRecuperacion } from '../services/api'
 import BACKGROUND_IMAGE from '../assets/campus.png'
 import LOGO_SRC from '../assets/logo-uajs.png'
 
@@ -16,14 +17,24 @@ const SERVICES = [
   { id: 'pqrs', label: 'PQRS', angle: 210 },
 ]
 
-// Cuentas de prueba (ver src/data/usuarios.json) para que cualquiera
-// pueda entrar a la plataforma sin depender de un backend real.
-const CUENTAS_DEMO = [
-  { rol: 'Estudiante', cedula: '1102345678', clave: '1234' },
-  { rol: 'Docente', cedula: '7788990011', clave: '1234' },
-  { rol: 'Administrativo', cedula: '4455667788', clave: '1234' },
-  { rol: 'Administrador', cedula: '1000000000', clave: 'admin1234' },
+// Cuentas de prueba para modo mock (src/data/usuarios.json) y modo real API (seeders MySQL).
+const CUENTAS_DEMO_MOCK = [
+  { rol: 'Estudiante', nombre: 'Valentina Herrera', cedula: '1102345678', email: 'valentina.herrera@uajs.edu.co', clave: '1234' },
+  { rol: 'Docente', nombre: 'Carlos Pérez', cedula: '7788990011', email: 'carlos.perez@uajs.edu.co', clave: '1234' },
+  { rol: 'Administrativo', nombre: 'Marcela Gómez', cedula: '4455667788', email: 'marcela.gomez@uajs.edu.co', clave: '1234' },
+  { rol: 'Administrador', nombre: 'Root Sistemas', cedula: '1000000000', email: 'sistemas@uajs.edu.co', clave: 'admin1234' },
 ]
+
+const CUENTAS_DEMO_REAL = [
+  { rol: 'Super Administrador', nombre: 'Darwin Montes', email: 'admin@uajs.edu.co', clave: 'Campus2026!*', detalle: 'Acceso total al sistema' },
+  { rol: 'Administrativo / Personal', nombre: 'Roberto Ospina', email: 'roberto.ospina@uajs.edu.co', clave: 'Campus2026!*', detalle: 'Gestión institucional' },
+  { rol: 'Docente', nombre: 'Carlos Mendoza', email: 'carlos.mendoza@uajs.edu.co', clave: 'Campus2026!*', detalle: 'Ing. y Tecnologías' },
+  { rol: 'Docente', nombre: 'Martha Rincón', email: 'martha.rincon@uajs.edu.co', clave: 'Campus2026!*', detalle: 'Ciencias de la Salud' },
+  { rol: 'Estudiante', nombre: 'Santiago Morales', email: 'santiago.morales@uajs.edu.co', clave: 'Campus2026!*', detalle: 'Ingeniería de Software' },
+  { rol: 'Estudiante', nombre: 'Valentina Gómez', email: 'valentina.gomez@uajs.edu.co', clave: 'Campus2026!*', detalle: 'Medicina General' },
+]
+
+const CUENTAS_DEMO = esModoMock ? CUENTAS_DEMO_MOCK : CUENTAS_DEMO_REAL
 
 function NetworkGraphic() {
   const cx = 150
@@ -114,27 +125,29 @@ function PasswordField({ id, label, value, onChange }) {
 }
 
 /**
- * Vista de acceso institucional. A diferencia del primer boceto, aquí
- * el formulario queda conectado a la autenticación real simulada en
- * services/api.js (contra src/data/usuarios.json): solo se entra a la
- * plataforma con una cédula y contraseña válidas.
+ * Vista de acceso institucional.
+ * - Modo mock (VITE_USE_MOCK_API=true): acepta cédula o correo de src/data/usuarios.json.
+ * - Modo real (auth-service vía gateway): exige correo institucional + contraseña,
+ *   guarda accessToken/refreshToken y el perfil de GET /auth/me.
  */
 export default function LoginPage() {
   const navigate = useNavigate()
   const { iniciarSesion } = useApp()
 
-  const [cedula, setCedula] = useState('')
+  const [identificador, setIdentificador] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [info, setInfo] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    setInfo('')
     setSubmitting(true)
     try {
-      await iniciarSesion(cedula, password)
+      await iniciarSesion(identificador, password, remember)
       navigate('/home')
     } catch (err) {
       setError(err.message || 'No fue posible iniciar sesión. Intenta nuevamente.')
@@ -144,9 +157,31 @@ export default function LoginPage() {
   }
 
   function usarCuentaDemo(cuenta) {
-    setCedula(cuenta.cedula)
+    // En mock vale cédula o correo; en real solo correo. Autocompletar correo cubre ambos.
+    setIdentificador(esModoMock ? cuenta.cedula : cuenta.email)
     setPassword(cuenta.clave)
     setError('')
+    setInfo('')
+  }
+
+  async function manejarOlvido(e) {
+    e.preventDefault()
+    setError('')
+    setInfo('')
+    if (!identificador.includes('@')) {
+      setError('Escribe tu correo institucional arriba para enviarte el enlace de recuperación.')
+      return
+    }
+    if (esModoMock) {
+      setInfo('La recuperación por correo solo está disponible con el backend real (auth-service).')
+      return
+    }
+    try {
+      await solicitarRecuperacion(identificador)
+      setInfo('Si el correo existe, se ha enviado un enlace de restablecimiento.')
+    } catch (err) {
+      setError(err.message || 'No fue posible solicitar la recuperación.')
+    }
   }
 
   return (
@@ -181,16 +216,14 @@ export default function LoginPage() {
 
           <div className="login-card__fields">
             <TextField
-              id="cedula"
-              label="Número de cédula"
+              id="identificador"
+              label={esModoMock ? 'Correo institucional o cédula' : 'Correo institucional'}
               type="text"
-              icon={CreditCard}
-              placeholder="1102345678"
-              inputMode="numeric"
-              pattern="[0-9]*"
+              icon={Mail}
+              placeholder={esModoMock ? 'usuario@uajs.edu.co o 1102345678' : 'usuario@uajs.edu.co'}
               autoComplete="username"
-              value={cedula}
-              onChange={(e) => setCedula(e.target.value)}
+              value={identificador}
+              onChange={(e) => setIdentificador(e.target.value)}
               required
             />
             <PasswordField
@@ -207,6 +240,12 @@ export default function LoginPage() {
             </p>
           )}
 
+          {info && (
+            <p className="login-card__info" role="status">
+              {info}
+            </p>
+          )}
+
           <div className="login-card__row">
             <label className="login-checkbox">
               <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
@@ -215,7 +254,7 @@ export default function LoginPage() {
               </span>
               Recordarme
             </label>
-            <a className="login-link" href="#!" onClick={(e) => e.preventDefault()}>
+            <a className="login-link" href="#!" onClick={manejarOlvido}>
               ¿Olvidaste tu contraseña?
             </a>
           </div>
@@ -226,14 +265,19 @@ export default function LoginPage() {
           </button>
 
           <div className="login-card__demo">
-            <p className="login-card__demo-title">Cuentas de prueba (clic para autocompletar)</p>
+            <p className="login-card__demo-title">
+              Cuentas de prueba {esModoMock ? 'mock' : 'seeder'} (clic para autocompletar)
+            </p>
             <ul className="login-card__demo-list">
               {CUENTAS_DEMO.map((cuenta) => (
-                <li key={cuenta.rol}>
-                  <button type="button" onClick={() => usarCuentaDemo(cuenta)}>
-                    <strong>{cuenta.rol}</strong>
-                    <span>
-                      {cuenta.cedula} / {cuenta.clave}
+                <li key={cuenta.email}>
+                  <button type="button" className="login-card__demo-btn" onClick={() => usarCuentaDemo(cuenta)}>
+                    <span className="login-card__demo-meta">
+                      <strong>{cuenta.rol}{cuenta.nombre ? ` · ${cuenta.nombre}` : ''}</strong>
+                      <small>{cuenta.detalle ? `${cuenta.detalle} · ` : ''}{esModoMock ? `C.C. ${cuenta.cedula}` : cuenta.email}</small>
+                    </span>
+                    <span className="login-card__demo-cred">
+                      {cuenta.clave}
                     </span>
                   </button>
                 </li>

@@ -40,8 +40,8 @@ export function AppProvider({ children }) {
     getNotificaciones(usuario.id).then(setNotificaciones)
   }, [usuario])
 
-  const iniciarSesion = useCallback(async (cedula, password) => {
-    const usuarioAutenticado = await iniciarSesionApi(cedula, password)
+  const iniciarSesion = useCallback(async (identificador, password) => {
+    const usuarioAutenticado = await iniciarSesionApi(identificador, password)
     setUsuario(usuarioAutenticado)
     return usuarioAutenticado
   }, [])
@@ -70,12 +70,25 @@ export function AppProvider({ children }) {
     [notificaciones]
   )
 
+  const roles = useMemo(
+    () => usuario?.roles || (usuario?.tipoUsuario ? [usuario.tipoUsuario] : []),
+    [usuario]
+  )
+  const rolesNorm = useMemo(() => roles.map((r) => String(r).toUpperCase()), [roles])
+  const esAdmin =
+    usuario?.tipoUsuario === 'ADMINISTRADOR' || rolesNorm.includes('ADMIN') || rolesNorm.includes('ADMINISTRADOR')
+  const esAdministrativo =
+    usuario?.tipoUsuario === 'ADMINISTRATIVO' ||
+    usuario?.tipoUsuario === 'ADMINISTRADOR' ||
+    rolesNorm.includes('STAFF') ||
+    rolesNorm.includes('ADMIN')
+
   const value = {
     usuario,
     cargandoUsuario,
     estaAutenticado: !!usuario,
-    esAdmin: usuario?.tipoUsuario === 'ADMINISTRADOR',
-    esAdministrativo: usuario?.tipoUsuario === 'ADMINISTRATIVO',
+    esAdmin,
+    esAdministrativo,
     iniciarSesion,
     cerrarSesion,
     notificaciones,
