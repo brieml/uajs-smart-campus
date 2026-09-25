@@ -1,0 +1,275 @@
+.uajs-login, .uajs-login * { box-sizing: border-box; }
+
+.uajs-login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 64% 36%;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* ---------- Panel izquierdo (hero institucional) ---------- */
+.uajs-login__hero {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-navy-900);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.uajs-login__hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, transparent 0%, rgba(5, 24, 44, 0.12) 55%, rgba(5, 24, 44, 0.4) 100%);
+  pointer-events: none;
+}
+
+.uajs-login__hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(5, 24, 44, 0.8) 0%, rgba(5, 24, 44, 0.55) 32%, rgba(5, 24, 44, 0.2) 65%, rgba(5, 24, 44, 0.4) 100%);
+  pointer-events: none;
+}
+
+.uajs-login__hero > * { position: relative; z-index: 2; }
+
+.hero__body { margin-top: 32px; }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  font-weight: 700;
+  color: var(--color-gold-400);
+  margin: 0 0 14px;
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 3.4vw, 40px);
+  line-height: 1.15;
+  color: #fff;
+  margin: 0 0 16px;
+}
+
+.subtext {
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.85;
+  max-width: 40ch;
+  margin: 0;
+}
+
+.network { width: min(380px, 90%); margin: 20px auto 0; overflow: visible; }
+.network__line { stroke: rgba(232, 169, 58, 0.35); stroke-width: 1; }
+.network__hub { fill: rgba(255, 255, 255, 0.08); stroke: rgba(255, 255, 255, 0.45); stroke-width: 1.2; }
+.network__hub-label { fill: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.03em; font-family: var(--font-body); }
+
+.network__dot {
+  fill: var(--color-gold-500);
+  filter: drop-shadow(0 0 4px rgba(232, 169, 58, 0.7));
+  animation: login-pulse 2.6s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.network__label {
+  fill: rgba(255, 255, 255, 0.78);
+  font-size: 9.5px;
+  letter-spacing: 0.01em;
+  font-family: var(--font-body);
+}
+
+@keyframes login-pulse {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .network__dot { animation: none; }
+}
+
+.hero__footnote {
+  font-size: 11px;
+  opacity: 0.6;
+  letter-spacing: 0.03em;
+  margin-top: 24px;
+}
+
+/* ---------- Panel derecho (formulario) ---------- */
+.uajs-login__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  overflow-y: auto;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  box-shadow: var(--shadow-pop);
+}
+
+.login-card__logo { display: flex; justify-content: center; margin-bottom: 2px; }
+.login-card__logo img { display: block; height: 56px; width: auto; }
+
+.login-card__eyebrow {
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-navy-600);
+  font-weight: 700;
+  margin: 0;
+}
+
+.login-card__title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-navy-900);
+}
+
+.login-card__subtitle { font-size: 14px; color: var(--color-text-muted); margin: 0; line-height: 1.5; }
+.login-card__fields { display: flex; flex-direction: column; gap: 14px; }
+
+.login-field { display: flex; flex-direction: column; gap: 6px; }
+.login-field__label { font-size: 12.5px; font-weight: 600; color: var(--color-text); }
+.login-field__control { position: relative; display: flex; align-items: center; }
+.login-field__icon { position: absolute; left: 12px; color: var(--color-text-soft); pointer-events: none; }
+
+.login-field__input {
+  width: 100%;
+  padding: 11px 40px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.login-field__input::placeholder { color: var(--color-text-soft); }
+.login-field__input:focus {
+  outline: none;
+  border-color: var(--color-navy-600);
+  box-shadow: 0 0 0 3px var(--color-info-bg);
+}
+
+.login-field__toggle {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--color-text-soft);
+  cursor: pointer;
+  display: flex;
+  padding: 6px;
+  border-radius: 6px;
+}
+.login-field__toggle:hover { color: var(--color-navy-700); }
+
+.login-card__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.login-card__row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+
+.login-checkbox { position: relative; display: flex; align-items: center; gap: 8px; color: var(--color-text-muted); cursor: pointer; user-select: none; }
+.login-checkbox input { position: absolute; opacity: 0; width: 18px; height: 18px; margin: 0; cursor: pointer; }
+.login-checkbox__box {
+  width: 18px; height: 18px; border-radius: 5px;
+  border: 1.5px solid var(--color-border);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  transition: background var(--transition-base), border-color var(--transition-base);
+}
+.login-checkbox input:checked + .login-checkbox__box { background: var(--color-navy-700); border-color: var(--color-navy-700); }
+
+.login-link { color: var(--color-navy-600); font-weight: 600; text-decoration: none; }
+.login-link:hover { text-decoration: underline; }
+
+.login-submit-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 18px;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--color-navy-800);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700; font-size: 14.5px;
+  cursor: pointer;
+  transition: background var(--transition-base), transform 120ms ease;
+}
+.login-submit-btn:hover:not(:disabled) { background: var(--color-navy-700); }
+.login-submit-btn:active { transform: translateY(1px); }
+.login-submit-btn:disabled { opacity: 0.75; cursor: progress; }
+
+.login-card__demo {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: var(--color-bg);
+}
+
+.login-card__demo-title { margin: 0 0 8px; font-size: 11.5px; font-weight: 700; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.login-card__demo-list { display: flex; flex-direction: column; gap: 4px; }
+
+.login-card__demo-list button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--color-navy-900);
+  cursor: pointer;
+  text-align: left;
+}
+.login-card__demo-list button:hover { background: var(--color-border); }
+.login-card__demo-list button span { font-family: var(--font-mono); color: var(--color-text-soft); font-size: 11.5px; }
+
+.login-card__footnote { font-size: 12.5px; color: var(--color-text-soft); text-align: center; margin-top: 2px; line-height: 1.5; }
+.login-card__footnote span { color: var(--color-text); font-weight: 600; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .uajs-login { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .uajs-login__hero { padding: 32px 24px; }
+  .uajs-login__panel { justify-content: center; padding: 32px 24px; }
+  .network { display: none; }
+  .hero__body { margin-top: 20px; }
+  .hero__footnote { margin-top: 16px; }
+}
+@media (max-width: 480px) {
+  .uajs-login__hero { padding: 28px 20px; }
+  .uajs-login__panel { padding: 24px 16px; }
+  .login-card { padding: 28px 22px; }
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "u-001",
+    "cedula": "1102345678",
+    "password": "1234",
+    "nombre": "Valentina Herrera Pérez",
+    "tipoUsuario": "ESTUDIANTE",
+    "programa": "Ingeniería de Sistemas",
+    "codigo": "UAJS-2023-0142",
+    "correo": "valentina.herrera@uajs.edu.co",
+    "activo": true
+  },
+  {
+    "id": "u-002",
+    "cedula": "7788990011",
+    "password": "1234",
+    "nombre": "Carlos Andrés Pérez Ruiz",
+    "tipoUsuario": "DOCENTE",
+    "programa": "Facultad de Ingeniería",
+    "codigo": "DOC-0087",
+    "correo": "carlos.perez@uajs.edu.co",
+    "activo": true
+  },
+  {
+    "id": "u-003",
+    "cedula": "4455667788",
+    "password": "1234",
+    "nombre": "Marcela Gómez Torres",
+    "tipoUsuario": "ADMINISTRATIVO",
+    "programa": "Registro y Control",
+    "codigo": "ADM-0033",
+    "correo": "marcela.gomez@uajs.edu.co",
+    "activo": true
+  },
+  {
+    "id": "u-004",
+    "cedula": "1000000000",
+    "password": "admin1234",
+    "nombre": "Root Sistemas UAJS",
+    "tipoUsuario": "ADMINISTRADOR",
+    "programa": "Oficina de Sistemas",
+    "codigo": "SYS-0001",
+    "correo": "sistemas@uajs.edu.co",
+    "activo": true
+  },
+  {
+    "id": "u-005",
+    "cedula": "8899001122",
+    "password": "1234",
+    "nombre": "Laura Ximena Cortés Silva",
+    "tipoUsuario": "DOCENTE",
+    "programa": "Facultad de Ciencias Económicas",
+    "codigo": "DOC-0102",
+    "correo": "laura.cortes@uajs.edu.co",
+    "activo": true
+  }
+]

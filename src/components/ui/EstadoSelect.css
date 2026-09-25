@@ -1,0 +1,12 @@
+.estado-select {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-navy-900);
+  font-family: var(--font-body);
+}
+
+.estado-select:disabled { opacity: 0.6; }
