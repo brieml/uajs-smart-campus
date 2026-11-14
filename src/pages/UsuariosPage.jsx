@@ -182,7 +182,14 @@ export default function UsuariosPage() {
             <FormField
               label="Tipo de documento"
               as="select"
-              options={(tiposDocumento?.length ? tiposDocumento.map((t) => t.code || t.codigo) : ['CC', 'TI', 'CE', 'PA'])}
+              options={
+                tiposDocumento?.length
+                  ? tiposDocumento.map((t) => ({
+                      value: t.code || t.codigo,
+                      label: `${t.code || t.codigo} - ${t.name || t.nombre || ''}`.trim(),
+                    }))
+                  : ['CC', 'TI', 'CE', 'PA']
+              }
               value={formulario.documentTypeCode}
               onChange={actualizarCampo('documentTypeCode')}
             />
@@ -200,18 +207,24 @@ export default function UsuariosPage() {
           <FormField label="Programa o dependencia" value={formulario.programa} onChange={actualizarCampo('programa')} placeholder="Ej. Ingeniería de Sistemas" />
           {!esModoMock && formulario.tipoUsuario === 'ESTUDIANTE' && (
             <FormField
-              label="Programa académico (ID real)"
+              label="Programa académico"
               as="select"
-              options={['', ...(programas || []).map((p) => String(p.id || p.codigo))]}
+              options={[
+                { value: '', label: 'Seleccione un programa…' },
+                ...(programas || []).map((p) => ({ value: String(p.id || p.codigo), label: p.nombre || `Programa ${p.id || p.codigo}` })),
+              ]}
               value={formulario.programaId}
               onChange={actualizarCampo('programaId')}
             />
           )}
           {!esModoMock && formulario.tipoUsuario === 'DOCENTE' && (
             <FormField
-              label="Facultad (ID real)"
+              label="Facultad"
               as="select"
-              options={['', ...(facultades || []).map((f) => String(f.id || f.codigo))]}
+              options={[
+                { value: '', label: 'Seleccione una facultad…' },
+                ...(facultades || []).map((f) => ({ value: String(f.id || f.codigo), label: f.nombre || `Facultad ${f.id || f.codigo}` })),
+              ]}
               value={formulario.facultadId}
               onChange={actualizarCampo('facultadId')}
             />

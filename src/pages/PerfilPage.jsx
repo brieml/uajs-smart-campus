@@ -186,9 +186,9 @@ export default function PerfilPage() {
             <LoadingSpinner label="Calculando actividad…" />
           ) : (
             <dl className="perfil-page__fields">
-              <div><dt>{esAdmin ? 'Solicitudes en sistema' : 'Mis solicitudes pendientes'}</dt><dd>{resumen.solicitudesPendientes}</dd></div>
-              <div><dt>{esAdmin ? 'Reservas en sistema' : 'Mis reservas realizadas'}</dt><dd>{resumen.reservasRealizadas}</dd></div>
-              <div><dt>Notificaciones sin leer</dt><dd>{resumen.notificacionesNoLeidas}</dd></div>
+              <div><dt>{esAdmin ? 'Solicitudes en sistema' : 'Mis solicitudes pendientes'}</dt><dd>{resumen?.solicitudesPendientes ?? 0}</dd></div>
+              <div><dt>{esAdmin ? 'Reservas en sistema' : 'Mis reservas realizadas'}</dt><dd>{resumen?.reservasRealizadas ?? 0}</dd></div>
+              <div><dt>Notificaciones sin leer</dt><dd>{resumen?.notificacionesNoLeidas ?? 0}</dd></div>
             </dl>
           )}
         </Card>

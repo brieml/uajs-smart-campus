@@ -22,9 +22,13 @@ export default function FormField({
 
       {as === 'select' ? (
         <select id={id} className="form-field__control" value={value} onChange={onChange} required={required} {...rest}>
-          {options.map((opcion) => (
-            <option key={opcion} value={opcion}>{opcion}</option>
-          ))}
+          {options.map((opcion) => {
+            const val = typeof opcion === 'object' && opcion !== null ? opcion.value : opcion
+            const lbl = typeof opcion === 'object' && opcion !== null ? opcion.label : opcion
+            return (
+              <option key={val} value={val}>{lbl}</option>
+            )
+          })}
         </select>
       ) : as === 'textarea' ? (
         <textarea id={id} className="form-field__control form-field__control--textarea" value={value} onChange={onChange} required={required} {...rest} />

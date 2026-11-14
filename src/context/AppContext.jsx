@@ -76,12 +76,12 @@ export function AppProvider({ children }) {
   )
   const rolesNorm = useMemo(() => roles.map((r) => String(r).toUpperCase()), [roles])
   const esAdmin =
-    usuario?.tipoUsuario === 'ADMINISTRADOR' || rolesNorm.includes('ADMIN') || rolesNorm.includes('ADMINISTRADOR')
+    usuario?.tipoUsuario === 'ADMINISTRADOR' ||
+    ['ADMIN', 'SUPERADMIN', 'SUPER_ADMINISTRADOR', 'ADMINISTRADOR'].some((r) => rolesNorm.includes(r))
   const esAdministrativo =
     usuario?.tipoUsuario === 'ADMINISTRATIVO' ||
-    usuario?.tipoUsuario === 'ADMINISTRADOR' ||
-    rolesNorm.includes('STAFF') ||
-    rolesNorm.includes('ADMIN')
+    esAdmin ||
+    ['STAFF', 'PERSONAL', 'ADMINISTRATIVO'].some((r) => rolesNorm.includes(r))
 
   const value = {
     usuario,

@@ -111,7 +111,9 @@ async function fetchJson(url, options = {}) {
     throw err
   }
 
-  return respuesta.json()
+  if (respuesta.status === 204) return null
+  const texto = await respuesta.text()
+  return texto ? JSON.parse(texto) : null
 }
 
 /* -------------------------------------------------------------------- */
@@ -134,7 +136,10 @@ function usuarioPublico(usuario) {
 
 function normalizarUsuarioBackend(user) {
   if (!user) return null
-  const roles = user.roles || (user.rol ? [user.rol] : [])
+  const rolesCrudos = user.roles || (user.rol ? [user.rol] : [])
+  const roles = rolesCrudos
+    .map((r) => (typeof r === 'string' ? r : r?.nombre || r?.name || r?.codigo || ''))
+    .filter(Boolean)
   const rolPrincipal = roles[0] || 'ESTUDIANTE'
   const rolNorm = String(rolPrincipal).toUpperCase()
 
@@ -247,7 +252,18 @@ export async function getUsuarioActual() {
         const publico = normalizarUsuarioBackend({ ...sesion, ...user })
         guardarStorage(STORAGE_KEYS.sesion, publico)
         return publico
-      } catch {
+      } catch (err) {
+        if (err?.status === 401 || err?.status === 403) {
+          // Token expirado o inválido: limpiar sesión local para forzar reautenticación
+          try {
+            window.localStorage.removeItem(STORAGE_KEYS.sesion)
+            window.localStorage.removeItem(STORAGE_KEYS.token)
+            window.localStorage.removeItem(STORAGE_KEYS.refreshToken)
+          } catch {
+            /* almacenamiento no disponible */
+          }
+          return null
+        }
         return sesion
       }
     }
@@ -283,9 +299,9 @@ export async function getUsuarios() {
 export async function crearUsuario(datos) {
   if (!USE_MOCK) {
     try {
-      const nombresPartes = (datos.nombre || '').trim().split(' ')
+      const nombresPartes = (datos.nombre || '').trim().split(/\s+/).filter(Boolean)
       const primerNombre = nombresPartes[0] || 'Nombre'
-      const segundoNombre = nombresPartes.length > 2 ? nombresPartes.slice(1, -1).join(' ') : (nombresPartes[1] || undefined)
+      const segundoNombre = nombresPartes.length > 2 ? nombresPartes.slice(1, -1).join(' ') : undefined
       const primerApellido = nombresPartes.length > 1 ? nombresPartes[nombresPartes.length - 1] : 'Apellido'
 
       const terceroRes = await fetchJson(`${API_BASE_URL}/universidad/terceros`, {
@@ -389,12 +405,12 @@ export async function actualizarUsuario(id, cambios) {
   guardarUsuarios(actualizados)
 
   const sesion = leerStorage(STORAGE_KEYS.sesion, null)
-  if (sesion && sesion.id === id) {
-    const actualizado = actualizados.find((u) => u.id === id)
+  const actualizado = actualizados.find((u) => u.id === id)
+  if (sesion && sesion.id === id && actualizado) {
     guardarStorage(STORAGE_KEYS.sesion, usuarioPublico(actualizado))
   }
 
-  return simularRed(usuarioPublico(actualizados.find((u) => u.id === id)))
+  return simularRed(usuarioPublico(actualizado))
 }
 
 export async function cambiarEstadoUsuario(id, activo) {
