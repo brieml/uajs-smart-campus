@@ -8,3 +8,6 @@ dist-ssr
 npm-debug.log*
 .vscode/*
 !.vscode/extensions.json
+*.zip
+url del proyecto depleado.txt
+

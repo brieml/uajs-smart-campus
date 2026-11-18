@@ -10,7 +10,7 @@
 services:
   frontend:
     build:
-      context: ./frontend
+      context: .
       dockerfile: Dockerfile
       target: production
     container_name: uajs-smart-campus-frontend

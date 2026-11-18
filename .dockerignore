@@ -7,3 +7,6 @@ npm-debug.log*
 .env.local
 .vscode
 *.md
+*.zip
+url del proyecto depleado.txt
+
